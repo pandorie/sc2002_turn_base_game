@@ -8,6 +8,8 @@ import java.util.List;
 
 public class BasicAttack implements Action {
 
+    public BasicAttack(Combatant target) {}
+
     @Override
     public void execute(Combatant source, List<Combatant> targets, BattleContext ctx) {
         if (targets == null || targets.isEmpty()) return;

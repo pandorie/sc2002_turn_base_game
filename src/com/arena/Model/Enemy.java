@@ -15,6 +15,7 @@ public abstract class Enemy extends Combatant {
         this.behaviour = behaviour;
     }
 
+
     public void takeTurn(BattleContext ctx) {
         Action action = behaviour.decideAction(this, ctx);
         List<Combatant> targets = ctx.getTargetsFor(this);

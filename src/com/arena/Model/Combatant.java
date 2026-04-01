@@ -1,7 +1,6 @@
 // Combatant.java
 package src.com.arena.Model;
 
-import src.com.arena.Interfaces.Action;
 import src.com.arena.Interfaces.StatusEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +49,10 @@ public abstract class Combatant {
         return this.hp > 0;
     }
 
+    public void removeEffect(Class<? extends StatusEffect> effectClass) {
+        activeEffects.removeIf(effect -> effectClass.isInstance(effect));
+    }
+
     public boolean hasEffect(Class<? extends StatusEffect> effectClass) {
         for (StatusEffect effect : activeEffects) {
             if (effectClass.isInstance(effect)) {
@@ -58,6 +61,12 @@ public abstract class Combatant {
         }
         return false;
     }
+
+    public boolean isDefeated() {
+        return this.hp <= 0;
+    }
+
+    public abstract boolean isStunned();
 
     // Getters
     public String getName()  { return name; }
@@ -72,4 +81,14 @@ public abstract class Combatant {
     public void setAtk(int atk) { this.atk = atk; }
     public void setDef(int def) { this.def = def; }
     public void setHp(int hp)   { this.hp = Math.max(0, Math.min(maxHp, hp)); }
+
+
+    public abstract void decrementStun();
+
+    public abstract List<StatusEffect> getStatusEffects();
+
+    public abstract void cleanExpiredEffects();
+
+    public abstract int getSpeed();
 }
+

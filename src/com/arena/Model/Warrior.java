@@ -2,8 +2,9 @@
 package src.com.arena.Model;
 
 import src.com.arena.Effects.StunEffect;
-import src.com.arena.Interfaces.Action;
-import src.com.arena.Engine.BattleContext;
+import src.com.arena.Interfaces.Item;
+import src.com.arena.Interfaces.StatusEffect;
+
 import java.util.List;
 
 public class Warrior extends Player {
@@ -35,5 +36,35 @@ public class Warrior extends Player {
         target.takeDamage(damage);
         target.applyEffect(new StunEffect());
         this.startCooldown(SKILL_COOLDOWN);
+    }
+
+    @Override
+    public int getSpeed() {
+        return spd;
+    }
+
+    @Override
+    public void decrementStun() {
+        // Implementation to decrement stun effect duration
+    }
+
+    @Override
+    public void cleanExpiredEffects() {
+        // Implementation to remove expired status effects
+    }
+
+    @Override
+    public List<StatusEffect> getStatusEffects() {
+        return new java.util.ArrayList<>();
+    }
+
+    @Override
+    public boolean isStunned() {
+        return false;
+    }
+
+    @Override
+    public void setInventory(List<Item> inventory) {
+        // Implementation to set player's inventory
     }
 }
