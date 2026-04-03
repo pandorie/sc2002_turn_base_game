@@ -1,6 +1,5 @@
 // PowerStone.java
 package src.com.arena.Items;
-
 import src.com.arena.Interfaces.Item;
 import src.com.arena.Model.Combatant;
 import src.com.arena.Model.Player;
@@ -19,25 +18,15 @@ public class PowerStone implements Item {
     public void use(Combatant target) {
         if (!used && target instanceof Player) {
             Player player = (Player) target;
-            // Trigger skill effect only — do NOT call startCooldown()
-            // cooldown remains exactly as it was before this item was used
+            // Save cooldown before — PowerStone must not change it
+            int cooldownBefore = player.getSkillCooldown();
             player.executeSpecialSkill(targets);
-            // Undo the cooldown that executeSpecialSkill just set
-            // because PowerStone must not start or change the cooldown
-            if (!player.isSkillReady()) {
-                player.startCooldown(player.getSkillCooldown() - 3);
-            }
+            // Restore exactly — undo whatever startCooldown() did inside executeSpecialSkill
+            player.startCooldown(cooldownBefore);
             used = true;
         }
     }
 
-    @Override
-    public String getName() {
-        return "Power Stone";
-    }
-
-    @Override
-    public boolean isUsed() {
-        return used;
-    }
+    @Override public String getName() { return "Power Stone"; }
+    @Override public boolean isUsed() { return used; }
 }

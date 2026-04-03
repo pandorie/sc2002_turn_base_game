@@ -1,6 +1,6 @@
 // Combatant.java
 package src.com.arena.Model;
-
+import src.com.arena.Effects.StunEffect;
 import src.com.arena.Interfaces.StatusEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,7 @@ public abstract class Combatant {
     }
 
     public void takeDamage(int damage) {
-        int actualDamage = Math.max(0, damage);
-        this.hp = Math.max(0, this.hp - actualDamage);
+        this.hp = Math.max(0, this.hp - Math.max(0, damage));
     }
 
     public void heal(int amount) {
@@ -45,28 +44,31 @@ public abstract class Combatant {
         activeEffects.removeIf(StatusEffect::isExpired);
     }
 
-    public boolean isAlive() {
-        return this.hp > 0;
+    public void cleanExpiredEffects() {
+        activeEffects.removeIf(StatusEffect::isExpired);
     }
 
-    public void removeEffect(Class<? extends StatusEffect> effectClass) {
-        activeEffects.removeIf(effect -> effectClass.isInstance(effect));
+    public boolean isAlive()    { return this.hp > 0; }
+    public boolean isDefeated() { return this.hp <= 0; }
+
+    // Stun check uses hasEffect — no subclass override needed
+    public boolean isStunned() {
+        return hasEffect(StunEffect.class);
     }
 
     public boolean hasEffect(Class<? extends StatusEffect> effectClass) {
         for (StatusEffect effect : activeEffects) {
-            if (effectClass.isInstance(effect)) {
-                return true;
-            }
+            if (effectClass.isInstance(effect)) return true;
         }
         return false;
     }
 
-    public boolean isDefeated() {
-        return this.hp <= 0;
+    public void removeEffect(Class<? extends StatusEffect> effectClass) {
+        activeEffects.removeIf(effectClass::isInstance);
     }
 
-    public abstract boolean isStunned();
+    public List<StatusEffect> getStatusEffects() { return activeEffects; }
+    public int getSpeed()  { return spd; }
 
     // Getters
     public String getName()  { return name; }
@@ -81,14 +83,4 @@ public abstract class Combatant {
     public void setAtk(int atk) { this.atk = atk; }
     public void setDef(int def) { this.def = def; }
     public void setHp(int hp)   { this.hp = Math.max(0, Math.min(maxHp, hp)); }
-
-
-    public abstract void decrementStun();
-
-    public abstract List<StatusEffect> getStatusEffects();
-
-    public abstract void cleanExpiredEffects();
-
-    public abstract int getSpeed();
 }
-
